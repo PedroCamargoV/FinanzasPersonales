@@ -68,26 +68,50 @@ export interface ValidationErrorResult {
  * Database error for data persistence issues
  *
  * @example
- * const error: DatabaseError = {
+ * const error = new DatabaseError({
  *   code: "DB_NOT_FOUND",
  *   message: "Transaction not found",
- *   timestamp: "2024-01-01T00:00:00Z",
- *   operation: "getTransaction",
+ *   operation: "read",
  *   storeName: "transactions"
- * }
+ * })
  */
-export interface DatabaseError extends AppError {
-  /** Database operation type */
+export class DatabaseError extends Error implements AppError {
+  code: string
+  override message: string
+  timestamp: string
+  context?: Record<string, unknown>
+  cause?: Error
   operation: 'create' | 'read' | 'update' | 'delete' | 'query' | 'transaction'
-
-  /** Object store name */
   storeName: string
-
-  /** Query key if applicable */
   key?: unknown
-
-  /** Duration of failed operation in milliseconds */
   duration?: number
+
+  constructor(error: {
+    code: string
+    message: string
+    timestamp?: string
+    context?: Record<string, unknown>
+    cause?: Error
+    operation: 'create' | 'read' | 'update' | 'delete' | 'query' | 'transaction'
+    storeName: string
+    key?: unknown
+    duration?: number
+  }) {
+    super(error.message)
+    this.name = 'DatabaseError'
+    this.code = error.code
+    this.message = error.message
+    this.timestamp = error.timestamp || new Date().toISOString()
+    this.context = error.context
+    this.cause = error.cause
+    this.operation = error.operation
+    this.storeName = error.storeName
+    this.key = error.key
+    this.duration = error.duration
+
+    // Set prototype for instanceof checks
+    Object.setPrototypeOf(this, DatabaseError.prototype)
+  }
 }
 
 /**

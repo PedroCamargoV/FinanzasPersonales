@@ -31,11 +31,10 @@ export type {
   AppError,
   ValidationError,
   ValidationErrorResult,
-  DatabaseError,
   CategoryError,
   TransactionError,
 } from './error'
-export { ErrorCode, ErrorSeverity } from './error'
+export { ErrorCode, ErrorSeverity, DatabaseError } from './error'
 export {
   isValidationError,
   isDatabaseError,
