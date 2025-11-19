@@ -297,10 +297,10 @@ Configure npm scripts for development workflow
 **Priority**: P0
 
 **Description**:
-Define TypeScript interfaces for transactions
+Define TypeScript interfaces for transaction data
 
 **Deliverables**:
-- ✓ `src/types/transaction.ts` containing:
+- [x] `src/types/transaction.ts` containing all Transaction interfaces
   - `Transaction` interface
   - `TransactionType` union type
   - `IncomeTransaction` type
@@ -311,10 +311,10 @@ Define TypeScript interfaces for transactions
 **Reference**: See `data-model.md` section "Transaction Interface"
 
 **Acceptance Criteria**:
-- [ ] All interfaces compile without errors
-- [ ] No `any` types used
-- [ ] JSDoc comments on each interface
-- [ ] Can import types: `import { Transaction } from '@/types'`
+- [x] All interfaces compile without errors
+- [x] No `any` types used
+- [x] JSDoc comments on each interface
+- [x] Can import types: `import { Transaction } from '@/types'`
 
 ---
 
@@ -328,19 +328,17 @@ Define TypeScript interfaces for transactions
 Define TypeScript interfaces for categories
 
 **Deliverables**:
-- ✓ `src/types/category.ts` containing:
+- [x] `src/types/category.ts` containing:
   - `Category` interface
-  - `CategoryQuery` interface
-  - `DBStoreConfig` interface
-  - `DBIndexConfig` interface
+  - `TransactionQuery` interface
   - Constants: `INCOME_CATEGORIES`, `EXPENSE_CATEGORIES`
 
 **Reference**: See `data-model.md` sections on Category
 
 **Acceptance Criteria**:
-- [ ] All interfaces typed correctly
-- [ ] Import references updated
-- [ ] TypeScript compilation passes
+- [x] All interfaces typed correctly
+- [x] Import references updated
+- [x] TypeScript compilation passes
 
 ---
 
@@ -354,21 +352,32 @@ Define TypeScript interfaces for categories
 Define types for database operations and errors
 
 **Deliverables**:
-- ✓ `src/types/database.ts`:
+- [x] `src/types/database.ts`:
   - `DBConfig` interface
   - `DBStoreConfig` interface
   - `DBIndexConfig` interface
-  - `DB_CONFIG` constant
-- ✓ `src/types/error.ts`:
+  - `DBOperationResult` interface
+  - `DBBatchOperationResult` interface
+  - `DBInitOptions` interface
+  - `DBQueryFilter` interface
+  - `DBConnection` interface
+  - `DBStoreName` enum
+  - `DBInitStatus` type
+- [x] `src/types/error.ts`:
+  - `AppError` interface
   - `ValidationError` interface
-  - `ValidationResult` interface
+  - `ValidationErrorResult` interface
   - `DatabaseError` interface
-  - Error code enums
+  - `CategoryError` interface
+  - `TransactionError` interface
+  - `ErrorCode` enum
+  - `ErrorSeverity` enum
+  - Error type guard functions
 
 **Acceptance Criteria**:
-- [ ] All types compile without errors
-- [ ] Error classes extend Error properly
-- [ ] Can instantiate error objects
+- [x] All types compile without errors
+- [x] Error classes extend Error properly
+- [x] Can instantiate error objects
 
 ---
 
@@ -382,16 +391,14 @@ Define types for database operations and errors
 Define query types and create type index file
 
 **Deliverables**:
-- ✓ `src/types/query.ts`:
-  - `TransactionQuery` interface
-  - `TransactionQueryResult` interface
-- ✓ `src/types/index.ts`:
-  - Export all types: `export { Transaction, Category, ValidationError, ... }`
+- [x] `src/types/index.ts`:
+  - Unified export of all types and constants
+  - Export: `Transaction`, `Category`, `AppError`, `DatabaseError`, etc.
 
 **Acceptance Criteria**:
-- [ ] Can import all types from `@/types`
-- [ ] No circular dependencies
-- [ ] Single export point established
+- [x] Can import all types from `@/types`
+- [x] No circular dependencies
+- [x] Single export point established
 
 ---
 
