@@ -164,122 +164,120 @@ export function ExportBackupManager({ onClose }: ExportBackupManagerProps) {
   }
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-      <div className="bg-white rounded-lg shadow-xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
-        {/* Header */}
-        <div className="sticky top-0 bg-white border-b border-gray-200 p-6 flex items-center justify-between">
-          <h2 className="text-2xl font-bold text-gray-900">💾 Exportar & Backup</h2>
-          <button
-            onClick={onClose}
-            className="text-gray-400 hover:text-gray-600 text-2xl font-bold"
-          >
-            ✕
-          </button>
-        </div>
+    <div className="w-full">
+      {/* Header */}
+      <div className="border-b border-gray-200 p-6 flex items-center justify-between">
+        <h2 className="text-2xl font-bold text-gray-900">💾 Exportar & Backup</h2>
+        <button
+          onClick={onClose}
+          className="text-gray-400 hover:text-gray-600 text-2xl font-bold"
+        >
+          ✕
+        </button>
+      </div>
 
-        {/* Content */}
-        <div className="p-6 space-y-6">
-          {/* Messages */}
-          {error && (
-            <div className="bg-red-50 border border-red-200 rounded-lg p-4 text-red-700">
-              {error}
-            </div>
-          )}
-          {success && (
-            <div className="bg-green-50 border border-green-200 rounded-lg p-4 text-green-700">
-              {success}
-            </div>
-          )}
-
-          {/* Export Section */}
-          <div className="bg-blue-50 p-6 rounded-lg border-2 border-blue-200">
-            <h3 className="text-lg font-semibold text-blue-900 mb-4">📥 Exportar Datos</h3>
-
-            <div className="space-y-3">
-              {/* CSV Export */}
-              <div className="bg-white p-4 rounded-lg border border-blue-100">
-                <h4 className="font-semibold text-gray-900 mb-2">Exportar a CSV</h4>
-                <p className="text-sm text-gray-600 mb-3">
-                  Descarga tus transacciones en formato CSV para usar en Excel o Sheets
-                </p>
-                <button
-                  onClick={handleExportCSV}
-                  disabled={loading}
-                  className="w-full px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium disabled:opacity-50"
-                >
-                  {loading ? 'Procesando...' : '📊 Descargar CSV'}
-                </button>
-              </div>
-
-              {/* JSON Backup */}
-              <div className="bg-white p-4 rounded-lg border border-blue-100">
-                <h4 className="font-semibold text-gray-900 mb-2">Crear Backup JSON</h4>
-                <p className="text-sm text-gray-600 mb-3">
-                  Crea un backup completo en JSON que puedas restaurar después
-                </p>
-                <button
-                  onClick={handleExportJSON}
-                  disabled={loading}
-                  className="w-full px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium disabled:opacity-50"
-                >
-                  {loading ? 'Procesando...' : '💾 Descargar Backup JSON'}
-                </button>
-              </div>
-            </div>
+      {/* Content */}
+      <div className="p-6 space-y-6">
+        {/* Messages */}
+        {error && (
+          <div className="bg-red-50 border border-red-200 rounded-lg p-4 text-red-700">
+            {error}
           </div>
-
-          {/* Restore Section */}
-          <div className="bg-green-50 p-6 rounded-lg border-2 border-green-200">
-            <h3 className="text-lg font-semibold text-green-900 mb-4">📤 Restaurar desde Backup</h3>
-
-            <div className="bg-white p-4 rounded-lg border border-green-100">
-              <h4 className="font-semibold text-gray-900 mb-2">Restaurar archivo JSON</h4>
-              <p className="text-sm text-gray-600 mb-3">
-                Selecciona un archivo JSON de backup para restaurar transacciones
-              </p>
-              <label className="w-full px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors font-medium cursor-pointer inline-block text-center disabled:opacity-50">
-                {loading ? 'Procesando...' : '📁 Seleccionar archivo'}
-                <input
-                  type="file"
-                  accept=".json"
-                  onChange={handleRestoreJSON}
-                  disabled={loading}
-                  className="hidden"
-                />
-              </label>
-              <p className="text-xs text-gray-500 mt-2">⚠️ Las transacciones restauradas se añadirán a las existentes</p>
-            </div>
+        )}
+        {success && (
+          <div className="bg-green-50 border border-green-200 rounded-lg p-4 text-green-700">
+            {success}
           </div>
+        )}
 
-          {/* Danger Zone */}
-          <div className="bg-red-50 p-6 rounded-lg border-2 border-red-200">
-            <h3 className="text-lg font-semibold text-red-900 mb-4">⚠️ Zona de Peligro</h3>
+        {/* Export Section */}
+        <div className="bg-blue-50 p-6 rounded-lg border-2 border-blue-200">
+          <h3 className="text-lg font-semibold text-blue-900 mb-4">📥 Exportar Datos</h3>
 
-            <div className="bg-white p-4 rounded-lg border border-red-100">
-              <h4 className="font-semibold text-gray-900 mb-2">Eliminar Todos los Datos</h4>
+          <div className="space-y-3">
+            {/* CSV Export */}
+            <div className="bg-white p-4 rounded-lg border border-blue-100">
+              <h4 className="font-semibold text-gray-900 mb-2">Exportar a CSV</h4>
               <p className="text-sm text-gray-600 mb-3">
-                Esta acción eliminará TODAS las transacciones de forma permanente. No se puede deshacer.
+                Descarga tus transacciones en formato CSV para usar en Excel o Sheets
               </p>
               <button
-                onClick={handleClearAll}
+                onClick={handleExportCSV}
                 disabled={loading}
-                className="w-full px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors font-medium disabled:opacity-50"
+                className="w-full px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium disabled:opacity-50"
               >
-                {loading ? 'Procesando...' : '🗑️ Eliminar Todos los Datos'}
+                {loading ? 'Procesando...' : '📊 Descargar CSV'}
+              </button>
+            </div>
+
+            {/* JSON Backup */}
+            <div className="bg-white p-4 rounded-lg border border-blue-100">
+              <h4 className="font-semibold text-gray-900 mb-2">Crear Backup JSON</h4>
+              <p className="text-sm text-gray-600 mb-3">
+                Crea un backup completo en JSON que puedas restaurar después
+              </p>
+              <button
+                onClick={handleExportJSON}
+                disabled={loading}
+                className="w-full px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium disabled:opacity-50"
+              >
+                {loading ? 'Procesando...' : '💾 Descargar Backup JSON'}
               </button>
             </div>
           </div>
+        </div>
 
-          {/* Info Section */}
-          <div className="bg-gray-100 p-4 rounded-lg">
-            <h4 className="font-semibold text-gray-900 mb-2">ℹ️ Información útil</h4>
-            <ul className="text-sm text-gray-700 space-y-1">
-              <li>• <strong>CSV:</strong> Ideal para importar a Excel, Google Sheets o análisis</li>
-              <li>• <strong>JSON:</strong> Formato completo que preserva toda la información</li>
-              <li>• <strong>Restore:</strong> Solo soporta archivos JSON creados por esta app</li>
-              <li>• <strong>Backup:</strong> Realiza copias de seguridad regularmente</li>
-            </ul>
+        {/* Restore Section */}
+        <div className="bg-green-50 p-6 rounded-lg border-2 border-green-200">
+          <h3 className="text-lg font-semibold text-green-900 mb-4">📤 Restaurar desde Backup</h3>
+
+          <div className="bg-white p-4 rounded-lg border border-green-100">
+            <h4 className="font-semibold text-gray-900 mb-2">Restaurar archivo JSON</h4>
+            <p className="text-sm text-gray-600 mb-3">
+              Selecciona un archivo JSON de backup para restaurar transacciones
+            </p>
+            <label className="w-full px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors font-medium cursor-pointer inline-block text-center disabled:opacity-50">
+              {loading ? 'Procesando...' : '📁 Seleccionar archivo'}
+              <input
+                type="file"
+                accept=".json"
+                onChange={handleRestoreJSON}
+                disabled={loading}
+                className="hidden"
+              />
+            </label>
+            <p className="text-xs text-gray-500 mt-2">⚠️ Las transacciones restauradas se añadirán a las existentes</p>
           </div>
+        </div>
+
+        {/* Danger Zone */}
+        <div className="bg-red-50 p-6 rounded-lg border-2 border-red-200">
+          <h3 className="text-lg font-semibold text-red-900 mb-4">⚠️ Zona de Peligro</h3>
+
+          <div className="bg-white p-4 rounded-lg border border-red-100">
+            <h4 className="font-semibold text-gray-900 mb-2">Eliminar Todos los Datos</h4>
+            <p className="text-sm text-gray-600 mb-3">
+              Esta acción eliminará TODAS las transacciones de forma permanente. No se puede deshacer.
+            </p>
+            <button
+              onClick={handleClearAll}
+              disabled={loading}
+              className="w-full px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors font-medium disabled:opacity-50"
+            >
+              {loading ? 'Procesando...' : '🗑️ Eliminar Todos los Datos'}
+            </button>
+          </div>
+        </div>
+
+        {/* Info Section */}
+        <div className="bg-gray-100 p-4 rounded-lg">
+          <h4 className="font-semibold text-gray-900 mb-2">ℹ️ Información útil</h4>
+          <ul className="text-sm text-gray-700 space-y-1">
+            <li>• <strong>CSV:</strong> Ideal para importar a Excel, Google Sheets o análisis</li>
+            <li>• <strong>JSON:</strong> Formato completo que preserva toda la información</li>
+            <li>• <strong>Restore:</strong> Solo soporta archivos JSON creados por esta app</li>
+            <li>• <strong>Backup:</strong> Realiza copias de seguridad regularmente</li>
+          </ul>
         </div>
       </div>
     </div>
