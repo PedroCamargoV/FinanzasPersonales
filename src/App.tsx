@@ -1,21 +1,26 @@
 import { useEffect, useState } from 'react'
-import { DatabaseService } from '@/services'
+import { DatabaseService, CategoryService } from '@/services'
+import { Dashboard, TransactionForm, TransactionList } from '@/components'
+import type { Transaction } from '@/types'
+
+type AppView = 'dashboard' | 'add' | 'list'
 
 export default function App() {
   const [isReady, setIsReady] = useState(false)
   const [error, setError] = useState<string | null>(null)
-  const [initTime, setInitTime] = useState<number>(0)
+  const [currentView, setCurrentView] = useState<AppView>('dashboard')
+  const [editingTransaction, setEditingTransaction] = useState<Transaction | null>(null)
+  const [refreshTrigger, setRefreshTrigger] = useState(0)
 
   useEffect(() => {
     const initializeApp = async () => {
-      const startTime = performance.now()
-
       try {
         // Initialize IndexedDB
         await DatabaseService.initialize()
-
-        const endTime = performance.now()
-        setInitTime(Math.round((endTime - startTime) * 100) / 100)
+        
+        // Initialize categories
+        await CategoryService.initializeCategories()
+        
         setIsReady(true)
       } catch (err) {
         const message = err instanceof Error ? err.message : 'Unknown error during database initialization'
@@ -53,27 +58,75 @@ export default function App() {
     )
   }
 
+  const handleAddSuccess = () => {
+    setCurrentView('list')
+    setEditingTransaction(null)
+    setRefreshTrigger(prev => prev + 1)
+  }
+
+  const handleEditTransaction = (transaction: Transaction) => {
+    setEditingTransaction(transaction)
+    setCurrentView('add')
+  }
+
+  const handleCancelForm = () => {
+    setEditingTransaction(null)
+    setCurrentView('dashboard')
+  }
+
   return (
     <div className="min-h-screen bg-gray-50">
+      {/* Header */}
       <header className="bg-white shadow">
         <div className="max-w-7xl mx-auto px-4 py-6">
-          <h1 className="text-3xl font-bold text-gray-900">Finanzas Personales</h1>
-          <p className="text-gray-500 text-sm">Phase 1 - Foundation Setup</p>
+          <div className="flex items-center justify-between">
+            <div>
+              <h1 className="text-3xl font-bold text-gray-900">💰 Finanzas Personales</h1>
+              <p className="text-gray-500 text-sm">Gestiona tus ingresos y gastos</p>
+            </div>
+            <nav className="flex gap-4">
+              <button
+                onClick={() => setCurrentView('dashboard')}
+                className={`px-4 py-2 rounded-lg font-medium transition-colors ${
+                  currentView === 'dashboard'
+                    ? 'bg-blue-600 text-white'
+                    : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+                }`}
+              >
+                Dashboard
+              </button>
+              <button
+                onClick={() => setCurrentView('list')}
+                className={`px-4 py-2 rounded-lg font-medium transition-colors ${
+                  currentView === 'list'
+                    ? 'bg-blue-600 text-white'
+                    : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+                }`}
+              >
+                Transacciones
+              </button>
+            </nav>
+          </div>
         </div>
       </header>
 
+      {/* Main Content */}
       <main className="max-w-7xl mx-auto px-4 py-8">
-        <div className="bg-white rounded-lg shadow p-6">
-          <h2 className="text-xl font-semibold text-gray-900 mb-4">Status</h2>
-          <div className="space-y-2">
-            <p className="text-green-600">✅ React 18 with TypeScript configured</p>
-            <p className="text-green-600">✅ Tailwind CSS initialized</p>
-            <p className="text-green-600">✅ IndexedDB initialized ({initTime}ms)</p>
-            <p className="text-green-600">✅ DatabaseService ready</p>
-            <p className="text-gray-400">⏳ CategoryService (pending)</p>
-            <p className="text-gray-400">⏳ TransactionService (pending)</p>
+        {currentView === 'dashboard' && <Dashboard onAddTransaction={() => setCurrentView('add')} />}
+
+        {currentView === 'add' && (
+          <div className="flex justify-center">
+            <TransactionForm
+              onSuccess={handleAddSuccess}
+              onCancel={handleCancelForm}
+              editingTransaction={editingTransaction}
+            />
           </div>
-        </div>
+        )}
+
+        {currentView === 'list' && (
+          <TransactionList onEdit={handleEditTransaction} refreshTrigger={refreshTrigger} />
+        )}
       </main>
     </div>
   )
