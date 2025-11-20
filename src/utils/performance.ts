@@ -50,15 +50,14 @@ class PerformanceTracker {
    *
    * @param operationName - Unique name for the operation
    * @param target - Target duration in milliseconds (optional)
-   * @returns Performance measurement result
-   * @throws Error if start() was not called first
+   * @returns Performance measurement result, or undefined if start() was not called
    */
-  end(operationName: string, target?: number): PerformanceMeasurement {
+  end(operationName: string, target?: number): PerformanceMeasurement | undefined {
     const startTime = this.currentMarks.get(operationName)
     if (startTime === undefined) {
-      throw new Error(
-        `Performance measurement "${operationName}" was not started. Call start() first.`
-      )
+      // Silently return undefined instead of throwing error
+      // This allows graceful handling in error paths
+      return undefined
     }
 
     const duration = performance.now() - startTime

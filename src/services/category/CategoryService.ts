@@ -10,22 +10,52 @@ class CategoryService {
    */
   static async initializeCategories(): Promise<void> {
     try {
-      // Check if categories already exist
-      const existingCategories = await DatabaseService.getAll('categories')
-      
-      if (existingCategories.success && existingCategories.data && existingCategories.data.length > 0) {
-        console.log(`✅ ${existingCategories.data.length} categories already initialized`)
+      // Get all existing categories
+      let existingCategories: any[] = []
+      try {
+        const result = await DatabaseService.getAll('categories')
+        existingCategories = result.data || []
+      } catch (err) {
+        // If getAll fails, treat as empty list and proceed with initialization
+        console.warn('Could not fetch existing categories, will reinitialize:', err)
+        existingCategories = []
+      }
+
+      // If we have categories, we're done
+      if (existingCategories.length > 0) {
+        console.log(`✅ ${existingCategories.length} categories already initialized`)
         return
       }
 
+      console.log('🔄 Starting category initialization...')
+
       // Create all predefined categories
       const allCategories = [...INCOME_CATEGORIES, ...EXPENSE_CATEGORIES]
+      let successCount = 0
+      let failedCount = 0
+      const failedCategories = []
       
       for (const category of allCategories) {
-        await DatabaseService.create('categories', category as any)
+        try {
+          await DatabaseService.create('categories', category as any)
+          successCount++
+          console.log(`✅ Created category: ${category.id}`)
+        } catch (err) {
+          failedCount++
+          failedCategories.push(category.id)
+          console.error(`❌ Failed to create category ${category.id}:`, err instanceof Error ? err.message : err)
+        }
       }
 
-      console.log(`✅ Initialized ${allCategories.length} categories`)
+      console.log(`📊 Category initialization complete: ${successCount}/${allCategories.length} successful`)
+      
+      if (failedCount > 0) {
+        console.warn(`⚠️ Failed categories: ${failedCategories.join(', ')}`)
+      }
+      
+      if (successCount === 0) {
+        throw new Error(`Failed to initialize any categories. Details: ${failedCategories.join(', ')}`)
+      }
     } catch (error) {
       throw new Error(`Failed to initialize categories: ${error instanceof Error ? error.message : 'Unknown error'}`)
     }

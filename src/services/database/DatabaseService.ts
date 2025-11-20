@@ -158,7 +158,7 @@ export class DatabaseService {
   private static _createDefaultConfig(): DBConfig {
     return {
       name: 'finanzas-personales',
-      version: 1,
+      version: 2,
       stores: [
         {
           name: 'transactions',
@@ -179,6 +179,15 @@ export class DatabaseService {
               keyPath: 'parentCategory',
               options: { unique: false },
             },
+          ],
+        },
+        {
+          name: 'recurring_transactions',
+          keyPath: 'id',
+          indexes: [
+            { name: 'type', keyPath: 'type', options: { unique: false } },
+            { name: 'category', keyPath: 'category', options: { unique: false } },
+            { name: 'isActive', keyPath: 'isActive', options: { unique: false } },
           ],
         },
       ],

@@ -25,10 +25,18 @@ export function TransactionForm({ onSuccess, onCancel, editingTransaction }: Tra
   useEffect(() => {
     const loadCategories = async () => {
       try {
+        // Add small delay to ensure categories are initialized in DB
+        await new Promise(resolve => setTimeout(resolve, 100))
+        
         const cats = await CategoryService.getCategoriesByType(formData.type)
         setCategories(cats)
+        
+        if (cats.length === 0) {
+          console.warn(`No categories found for type: ${formData.type}`)
+        }
       } catch (err) {
         console.error('Failed to load categories:', err)
+        setCategories([])
       }
     }
 
@@ -166,7 +174,7 @@ export function TransactionForm({ onSuccess, onCancel, editingTransaction }: Tra
           >
             <option value="">Selecciona una categoría</option>
             {categories.map(cat => (
-              <option key={cat.id} value={cat.name}>
+              <option key={cat.id} value={cat.id}>
                 {cat.name}
               </option>
             ))}
