@@ -1,14 +1,36 @@
 import { useEffect, useState } from 'react'
+import { DatabaseService } from '@/services'
 
 export default function App() {
   const [isReady, setIsReady] = useState(false)
   const [error, setError] = useState<string | null>(null)
+  const [initTime, setInitTime] = useState<number>(0)
 
   useEffect(() => {
-    // Database initialization will be added in Task 17
-    // For now, just mark as ready for dev
-    setIsReady(true)
-  }, [setError])
+    const initializeApp = async () => {
+      const startTime = performance.now()
+
+      try {
+        // Initialize IndexedDB
+        await DatabaseService.initialize()
+
+        const endTime = performance.now()
+        setInitTime(Math.round((endTime - startTime) * 100) / 100)
+        setIsReady(true)
+      } catch (err) {
+        const message = err instanceof Error ? err.message : 'Unknown error during database initialization'
+        setError(message)
+        console.error('App initialization failed:', err)
+      }
+    }
+
+    initializeApp()
+
+    // Cleanup on unmount
+    return () => {
+      DatabaseService.close()
+    }
+  }, [])
 
   if (error) {
     return (
@@ -46,8 +68,10 @@ export default function App() {
           <div className="space-y-2">
             <p className="text-green-600">✅ React 18 with TypeScript configured</p>
             <p className="text-green-600">✅ Tailwind CSS initialized</p>
-            <p className="text-gray-400">⏳ IndexedDB setup (pending Task 17)</p>
-            <p className="text-gray-400">⏳ Services implementation (pending)</p>
+            <p className="text-green-600">✅ IndexedDB initialized ({initTime}ms)</p>
+            <p className="text-green-600">✅ DatabaseService ready</p>
+            <p className="text-gray-400">⏳ CategoryService (pending)</p>
+            <p className="text-gray-400">⏳ TransactionService (pending)</p>
           </div>
         </div>
       </main>

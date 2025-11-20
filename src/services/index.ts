@@ -4,3 +4,4 @@
  */
 
 export { DatabaseService } from './database'
+export { CategoryService } from './category'
