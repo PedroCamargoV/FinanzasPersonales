@@ -13,11 +13,6 @@ export default function App() {
   const [currentView, setCurrentView] = useState<AppView>('dashboard')
   const [editingTransaction, setEditingTransaction] = useState<Transaction | null>(null)
   const [refreshTrigger, setRefreshTrigger] = useState(0)
-  const [showCategoryManager, setShowCategoryManager] = useState(false)
-  const [showAnalytics, setShowAnalytics] = useState(false)
-  const [showRecurring, setShowRecurring] = useState(false)
-  const [showExport, setShowExport] = useState(false)
-  const [showSettings, setShowSettings] = useState(false)
   const { toasts, removeToast } = useToast()
 
   useEffect(() => {
@@ -123,11 +118,11 @@ export default function App() {
                   { title: 'Ajustes', icon: SettingsIcon },
                 ]}
                 onChange={(index) => {
-                  if (index === 0) setShowCategoryManager(true)
-                  else if (index === 1) setShowAnalytics(true)
-                  else if (index === 2) setShowRecurring(true)
-                  else if (index === 3) setShowExport(true)
-                  else if (index === 5) setShowSettings(true)
+                  if (index === 0) setCurrentView('categories')
+                  else if (index === 1) setCurrentView('analytics')
+                  else if (index === 2) setCurrentView('recurring')
+                  else if (index === 3) setCurrentView('export')
+                  else if (index === 5) setCurrentView('settings')
                 }}
                 activeColor="text-blue-600"
               />
@@ -153,32 +148,27 @@ export default function App() {
         {currentView === 'list' && (
           <TransactionList onEdit={handleEditTransaction} refreshTrigger={refreshTrigger} />
         )}
+
+        {currentView === 'categories' && (
+          <CategoryManager onClose={() => setCurrentView('dashboard')} />
+        )}
+
+        {currentView === 'analytics' && (
+          <Analytics onClose={() => setCurrentView('dashboard')} />
+        )}
+
+        {currentView === 'recurring' && (
+          <RecurringTransactionManager onClose={() => setCurrentView('dashboard')} />
+        )}
+
+        {currentView === 'export' && (
+          <ExportBackupManager onClose={() => setCurrentView('dashboard')} />
+        )}
+
+        {currentView === 'settings' && (
+          <Settings onClose={() => setCurrentView('dashboard')} />
+        )}
       </main>
-
-      {/* Category Manager Modal */}
-      {showCategoryManager && (
-        <CategoryManager onClose={() => setShowCategoryManager(false)} />
-      )}
-
-      {/* Analytics Modal */}
-      {showAnalytics && (
-        <Analytics onClose={() => setShowAnalytics(false)} />
-      )}
-
-      {/* Recurring Transaction Manager Modal */}
-      {showRecurring && (
-        <RecurringTransactionManager onClose={() => setShowRecurring(false)} />
-      )}
-
-      {/* Export/Backup Modal */}
-      {showExport && (
-        <ExportBackupManager onClose={() => setShowExport(false)} />
-      )}
-
-      {/* Settings Modal */}
-      {showSettings && (
-        <Settings onClose={() => setShowSettings(false)} />
-      )}
 
       {/* Toast Notifications */}
       <ToastContainer toasts={toasts} onRemove={removeToast} />
