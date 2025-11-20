@@ -11,6 +11,9 @@ export type { TransactionType } from './transaction'
 export type { Category, TransactionQuery } from './category'
 export { INCOME_CATEGORIES, EXPENSE_CATEGORIES } from './category'
 
+// Recurring Transaction types
+export type { RecurringTransaction, RecurrenceFrequency } from './recurring'
+
 // Database types
 export type {
   DBConfig,
