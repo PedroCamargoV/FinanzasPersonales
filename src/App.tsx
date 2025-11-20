@@ -1,7 +1,8 @@
 import { useEffect, useState } from 'react'
 import { DatabaseService, CategoryService } from '@/services'
-import { Dashboard, TransactionForm, TransactionList, CategoryManager, Analytics, RecurringTransactionManager, ExportBackupManager, Settings } from '@/components'
+import { Dashboard, TransactionForm, TransactionList, CategoryManager, Analytics, RecurringTransactionManager, ExportBackupManager, Settings, ExpandableTabs } from '@/components'
 import { useToast, ToastContainer } from '@/utils/toast'
+import { BookOpen, BarChart3, Clock, HardDrive, Settings as SettingsIcon } from 'lucide-react'
 import type { Transaction } from '@/types'
 
 type AppView = 'dashboard' | 'add' | 'list' | 'categories' | 'analytics' | 'recurring' | 'export' | 'settings'
@@ -12,11 +13,6 @@ export default function App() {
   const [currentView, setCurrentView] = useState<AppView>('dashboard')
   const [editingTransaction, setEditingTransaction] = useState<Transaction | null>(null)
   const [refreshTrigger, setRefreshTrigger] = useState(0)
-  const [showCategoryManager, setShowCategoryManager] = useState(false)
-  const [showAnalytics, setShowAnalytics] = useState(false)
-  const [showRecurring, setShowRecurring] = useState(false)
-  const [showExport, setShowExport] = useState(false)
-  const [showSettings, setShowSettings] = useState(false)
   const { toasts, removeToast } = useToast()
 
   useEffect(() => {
@@ -91,7 +87,7 @@ export default function App() {
               <h1 className="text-3xl font-bold text-gray-900">💰 Finanzas Personales</h1>
               <p className="text-gray-500 text-sm">Gestiona tus ingresos y gastos</p>
             </div>
-            <nav className="flex gap-4">
+            <nav className="flex gap-2">
               <button
                 onClick={() => setCurrentView('dashboard')}
                 className={`px-4 py-2 rounded-lg font-medium transition-colors ${
@@ -112,36 +108,24 @@ export default function App() {
               >
                 Transacciones
               </button>
-              <button
-                onClick={() => setShowCategoryManager(true)}
-                className="px-4 py-2 rounded-lg font-medium bg-purple-600 text-white hover:bg-purple-700 transition-colors"
-              >
-                📁 Categorías
-              </button>
-              <button
-                onClick={() => setShowAnalytics(true)}
-                className="px-4 py-2 rounded-lg font-medium bg-orange-600 text-white hover:bg-orange-700 transition-colors"
-              >
-                📊 Análisis
-              </button>
-              <button
-                onClick={() => setShowRecurring(true)}
-                className="px-4 py-2 rounded-lg font-medium bg-indigo-600 text-white hover:bg-indigo-700 transition-colors"
-              >
-                ⏱️ Recurrentes
-              </button>
-              <button
-                onClick={() => setShowExport(true)}
-                className="px-4 py-2 rounded-lg font-medium bg-teal-600 text-white hover:bg-teal-700 transition-colors"
-              >
-                💾 Backup
-              </button>
-              <button
-                onClick={() => setShowSettings(true)}
-                className="px-4 py-2 rounded-lg font-medium bg-gray-600 text-white hover:bg-gray-700 transition-colors"
-              >
-                ⚙️ Ajustes
-              </button>
+              <ExpandableTabs
+                tabs={[
+                  { title: 'Categorías', icon: BookOpen },
+                  { title: 'Análisis', icon: BarChart3 },
+                  { title: 'Recurrentes', icon: Clock },
+                  { title: 'Backup', icon: HardDrive },
+                  { type: 'separator' },
+                  { title: 'Ajustes', icon: SettingsIcon },
+                ]}
+                onChange={(index) => {
+                  if (index === 0) setCurrentView('categories')
+                  else if (index === 1) setCurrentView('analytics')
+                  else if (index === 2) setCurrentView('recurring')
+                  else if (index === 3) setCurrentView('export')
+                  else if (index === 5) setCurrentView('settings')
+                }}
+                activeColor="text-blue-600"
+              />
             </nav>
           </div>
         </div>
@@ -164,32 +148,27 @@ export default function App() {
         {currentView === 'list' && (
           <TransactionList onEdit={handleEditTransaction} refreshTrigger={refreshTrigger} />
         )}
+
+        {currentView === 'categories' && (
+          <CategoryManager onClose={() => setCurrentView('dashboard')} />
+        )}
+
+        {currentView === 'analytics' && (
+          <Analytics onClose={() => setCurrentView('dashboard')} />
+        )}
+
+        {currentView === 'recurring' && (
+          <RecurringTransactionManager onClose={() => setCurrentView('dashboard')} />
+        )}
+
+        {currentView === 'export' && (
+          <ExportBackupManager onClose={() => setCurrentView('dashboard')} />
+        )}
+
+        {currentView === 'settings' && (
+          <Settings onClose={() => setCurrentView('dashboard')} />
+        )}
       </main>
-
-      {/* Category Manager Modal */}
-      {showCategoryManager && (
-        <CategoryManager onClose={() => setShowCategoryManager(false)} />
-      )}
-
-      {/* Analytics Modal */}
-      {showAnalytics && (
-        <Analytics onClose={() => setShowAnalytics(false)} />
-      )}
-
-      {/* Recurring Transaction Manager Modal */}
-      {showRecurring && (
-        <RecurringTransactionManager onClose={() => setShowRecurring(false)} />
-      )}
-
-      {/* Export/Backup Modal */}
-      {showExport && (
-        <ExportBackupManager onClose={() => setShowExport(false)} />
-      )}
-
-      {/* Settings Modal */}
-      {showSettings && (
-        <Settings onClose={() => setShowSettings(false)} />
-      )}
 
       {/* Toast Notifications */}
       <ToastContainer toasts={toasts} onRemove={removeToast} />
