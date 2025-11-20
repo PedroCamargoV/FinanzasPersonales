@@ -94,19 +94,16 @@ export function CategoryManager({ onClose }: CategoryManagerProps) {
 
   if (loading) {
     return (
-      <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-        <div className="bg-white rounded-lg shadow-xl p-6 max-w-2xl w-full mx-4">
-          <p className="text-gray-600 text-center">Cargando categorías...</p>
-        </div>
+      <div className="flex items-center justify-center min-h-screen">
+        <p className="text-gray-600 text-center">Cargando categorías...</p>
       </div>
     )
   }
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-      <div className="bg-white rounded-lg shadow-xl max-w-6xl w-full max-h-[90vh] overflow-y-auto">
+    <div className="w-full">
         {/* Header */}
-        <div className="sticky top-0 bg-white border-b border-gray-200 p-6 flex items-center justify-between">
+        <div className="border-b border-gray-200 p-6 flex items-center justify-between">
           <h2 className="text-2xl font-bold text-gray-900">📁 Gestionar Categorías</h2>
           <button
             onClick={onClose}
@@ -314,17 +311,6 @@ export function CategoryManager({ onClose }: CategoryManagerProps) {
             )}
           </div>
         </div>
-
-        {/* Footer */}
-        <div className="border-t border-gray-200 p-6 bg-gray-50">
-          <button
-            onClick={onClose}
-            className="w-full px-4 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition-colors font-medium"
-          >
-            Cerrar
-          </button>
-        </div>
-      </div>
     </div>
   )
 }
