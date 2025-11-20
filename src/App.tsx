@@ -1,9 +1,9 @@
 import { useEffect, useState } from 'react'
 import { DatabaseService, CategoryService } from '@/services'
-import { Dashboard, TransactionForm, TransactionList, CategoryManager, Analytics, RecurringTransactionManager } from '@/components'
+import { Dashboard, TransactionForm, TransactionList, CategoryManager, Analytics, RecurringTransactionManager, ExportBackupManager } from '@/components'
 import type { Transaction } from '@/types'
 
-type AppView = 'dashboard' | 'add' | 'list' | 'categories' | 'analytics' | 'recurring'
+type AppView = 'dashboard' | 'add' | 'list' | 'categories' | 'analytics' | 'recurring' | 'export'
 
 export default function App() {
   const [isReady, setIsReady] = useState(false)
@@ -14,6 +14,7 @@ export default function App() {
   const [showCategoryManager, setShowCategoryManager] = useState(false)
   const [showAnalytics, setShowAnalytics] = useState(false)
   const [showRecurring, setShowRecurring] = useState(false)
+  const [showExport, setShowExport] = useState(false)
 
   useEffect(() => {
     const initializeApp = async () => {
@@ -126,6 +127,12 @@ export default function App() {
               >
                 ⏱️ Recurrentes
               </button>
+              <button
+                onClick={() => setShowExport(true)}
+                className="px-4 py-2 rounded-lg font-medium bg-teal-600 text-white hover:bg-teal-700 transition-colors"
+              >
+                💾 Backup
+              </button>
             </nav>
           </div>
         </div>
@@ -163,6 +170,11 @@ export default function App() {
       {/* Recurring Transaction Manager Modal */}
       {showRecurring && (
         <RecurringTransactionManager onClose={() => setShowRecurring(false)} />
+      )}
+
+      {/* Export/Backup Modal */}
+      {showExport && (
+        <ExportBackupManager onClose={() => setShowExport(false)} />
       )}
     </div>
   )
