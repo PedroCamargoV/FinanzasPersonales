@@ -104,7 +104,7 @@ export function CategoryManager({ onClose }: CategoryManagerProps) {
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-      <div className="bg-white rounded-lg shadow-xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+      <div className="bg-white rounded-lg shadow-xl max-w-6xl w-full max-h-[90vh] overflow-y-auto">
         {/* Header */}
         <div className="sticky top-0 bg-white border-b border-gray-200 p-6 flex items-center justify-between">
           <h2 className="text-2xl font-bold text-gray-900">📁 Gestionar Categorías</h2>
@@ -130,34 +130,79 @@ export function CategoryManager({ onClose }: CategoryManagerProps) {
 
         {/* Content */}
         <div className="p-6 space-y-6">
-          {/* Predefined Categories */}
+          {/* Predefined Categories - Two Column Layout */}
           <div>
             <h3 className="text-lg font-semibold text-gray-900 mb-4">
               🔒 Categorías Predefinidas (No editables)
             </h3>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-              {categories.map(cat => (
-                <div key={cat.id} className="flex items-center gap-3 p-3 bg-gray-50 rounded-lg">
-                  <div
-                    className="w-4 h-4 rounded-full flex-shrink-0"
-                    style={{ backgroundColor: '#3B82F6' }}
-                  ></div>
-                  <span className="text-sm text-gray-700 flex-grow">{cat.name}</span>
-                  <span
-                    className={`text-xs px-2 py-1 rounded-full font-medium ${
-                      cat.type === 'ingreso'
-                        ? 'bg-green-100 text-green-700'
-                        : 'bg-red-100 text-red-700'
-                    }`}
-                  >
-                    {cat.type}
-                  </span>
+            
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+              {/* Ingresos Column */}
+              <div className="border border-gray-200 rounded-lg p-4 bg-white">
+                <h4 className="font-semibold text-green-700 mb-4 pb-2 border-b-2 border-green-200">
+                  💰 Ingresos
+                </h4>
+                <div className="space-y-2">
+                  {categories
+                    .filter(c => c.type === 'ingreso')
+                    .sort((a, b) => a.name.localeCompare(b.name))
+                    .map(cat => (
+                      <div key={cat.id} className="flex items-center gap-3 p-3 bg-green-50 rounded-lg hover:bg-green-100 transition-colors">
+                        <div
+                          className="w-4 h-4 rounded-full flex-shrink-0"
+                          style={{ backgroundColor: cat.color || '#4CAF50' }}
+                        ></div>
+                        <span className="text-sm text-gray-700">{cat.name}</span>
+                      </div>
+                    ))}
                 </div>
-              ))}
+              </div>
+
+              {/* Gastos Column */}
+              <div className="border border-gray-200 rounded-lg p-4 bg-white">
+                <h4 className="font-semibold text-red-700 mb-4 pb-2 border-b-2 border-red-200">
+                  💸 Gastos
+                </h4>
+                <div className="space-y-2 max-h-[400px] overflow-y-auto">
+                  {categories
+                    .filter(c => c.type === 'gasto' && !c.parentCategory)
+                    .sort((a, b) => a.name.localeCompare(b.name))
+                    .map(parentCat => {
+                      const subcategories = categories
+                        .filter(c => c.parentCategory === parentCat.id)
+                        .sort((a, b) => a.name.localeCompare(b.name))
+
+                      return (
+                        <div key={parentCat.id} className="space-y-1">
+                          {/* Parent Category */}
+                          <div className="flex items-center gap-3 p-3 bg-red-50 rounded-lg hover:bg-red-100 transition-colors font-medium">
+                            <div
+                              className="w-4 h-4 rounded-full flex-shrink-0"
+                              style={{ backgroundColor: parentCat.color || '#FF6B6B' }}
+                            ></div>
+                            <span className="text-sm text-gray-800">{parentCat.name}</span>
+                          </div>
+                          
+                          {/* Subcategories */}
+                          {subcategories.length > 0 && (
+                            <div className="pl-6 space-y-1">
+                              {subcategories.map(subCat => (
+                                <div key={subCat.id} className="flex items-center gap-3 p-2 bg-gray-50 rounded hover:bg-gray-100 transition-colors">
+                                  <div
+                                    className="w-3 h-3 rounded-full flex-shrink-0"
+                                    style={{ backgroundColor: subCat.color || '#FF6B6B' }}
+                                  ></div>
+                                  <span className="text-xs text-gray-600">{subCat.name}</span>
+                                </div>
+                              ))}
+                            </div>
+                          )}
+                        </div>
+                      )
+                    })}
+                </div>
+              </div>
             </div>
-            {categories.length === 0 && (
-              <p className="text-gray-500 text-sm">No hay categorías predefinidas</p>
-            )}
           </div>
 
           {/* Custom Categories */}
