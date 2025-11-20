@@ -6,3 +6,4 @@
 export { DatabaseService } from './database'
 export { CategoryService } from './category'
 export { ValidationService, type ValidationResult } from './validation'
+export { TransactionService, type TransactionStats } from './transaction'
