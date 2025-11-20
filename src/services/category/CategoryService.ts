@@ -54,6 +54,67 @@ class CategoryService {
       throw new Error(`Failed to get categories: ${error instanceof Error ? error.message : 'Unknown error'}`)
     }
   }
+
+  /**
+   * Create a custom category
+   */
+  static async createCategory(name: string, type: 'ingreso' | 'gasto'): Promise<Category> {
+    try {
+      const now = new Date().toISOString()
+      const newCategory: any = {
+        id: `cat-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
+        name,
+        type,
+        isSystemDefined: false,
+        createdAt: now,
+        updatedAt: now,
+      }
+
+      const result = await DatabaseService.create('categories', newCategory)
+      if (!result.success) {
+        throw new Error('Failed to create category in database')
+      }
+
+      return newCategory
+    } catch (error) {
+      throw new Error(`Failed to create category: ${error instanceof Error ? error.message : 'Unknown error'}`)
+    }
+  }
+
+  /**
+   * Delete a custom category
+   */
+  static async deleteCategory(categoryId: string): Promise<void> {
+    try {
+      const category = await CategoryService.getCategory(categoryId)
+      if (!category) {
+        throw new Error('Category not found')
+      }
+
+      if (category.isSystemDefined) {
+        throw new Error('Cannot delete predefined categories')
+      }
+
+      const result = await DatabaseService.delete('categories', categoryId)
+      if (!result.success) {
+        throw new Error('Failed to delete category from database')
+      }
+    } catch (error) {
+      throw new Error(`Failed to delete category: ${error instanceof Error ? error.message : 'Unknown error'}`)
+    }
+  }
+
+  /**
+   * Get a single category by ID
+   */
+  static async getCategory(id: string): Promise<Category | null> {
+    try {
+      const result = await DatabaseService.getById('categories', id)
+      return (result.data as Category) || null
+    } catch (error) {
+      throw new Error(`Failed to get category: ${error instanceof Error ? error.message : 'Unknown error'}`)
+    }
+  }
 }
 
 export default CategoryService

@@ -1,9 +1,9 @@
 import { useEffect, useState } from 'react'
 import { DatabaseService, CategoryService } from '@/services'
-import { Dashboard, TransactionForm, TransactionList } from '@/components'
+import { Dashboard, TransactionForm, TransactionList, CategoryManager } from '@/components'
 import type { Transaction } from '@/types'
 
-type AppView = 'dashboard' | 'add' | 'list'
+type AppView = 'dashboard' | 'add' | 'list' | 'categories'
 
 export default function App() {
   const [isReady, setIsReady] = useState(false)
@@ -11,6 +11,7 @@ export default function App() {
   const [currentView, setCurrentView] = useState<AppView>('dashboard')
   const [editingTransaction, setEditingTransaction] = useState<Transaction | null>(null)
   const [refreshTrigger, setRefreshTrigger] = useState(0)
+  const [showCategoryManager, setShowCategoryManager] = useState(false)
 
   useEffect(() => {
     const initializeApp = async () => {
@@ -105,6 +106,12 @@ export default function App() {
               >
                 Transacciones
               </button>
+              <button
+                onClick={() => setShowCategoryManager(true)}
+                className="px-4 py-2 rounded-lg font-medium bg-purple-600 text-white hover:bg-purple-700 transition-colors"
+              >
+                📁 Categorías
+              </button>
             </nav>
           </div>
         </div>
@@ -128,6 +135,11 @@ export default function App() {
           <TransactionList onEdit={handleEditTransaction} refreshTrigger={refreshTrigger} />
         )}
       </main>
+
+      {/* Category Manager Modal */}
+      {showCategoryManager && (
+        <CategoryManager onClose={() => setShowCategoryManager(false)} />
+      )}
     </div>
   )
 }
