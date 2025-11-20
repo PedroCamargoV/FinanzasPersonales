@@ -1,6 +1,7 @@
 import { Transaction, Category } from '@/types'
 import { VALIDATION, ERROR_MESSAGES } from '@/utils/constants'
 import { isValidDate, isPastDate } from '@/utils/date'
+import { parseLatinoAmount, isValidLatinoFormat } from '@/utils/currency'
 
 /**
  * Validation result interface
@@ -67,6 +68,17 @@ class ValidationService {
     // Validate amount
     if (transaction.amount === undefined || transaction.amount === null) {
       errors.push(ERROR_MESSAGES.VALIDATION_INVALID_TRANSACTION_AMOUNT)
+    } else if (typeof transaction.amount === 'string') {
+      // Support Latin American format
+      if (!isValidLatinoFormat(transaction.amount)) {
+        errors.push(ERROR_MESSAGES.VALIDATION_INVALID_TRANSACTION_AMOUNT)
+      } else {
+        const parsed = parseLatinoAmount(transaction.amount)
+        if (parsed < VALIDATION.TRANSACTION_AMOUNT_MIN ||
+            parsed > VALIDATION.TRANSACTION_AMOUNT_MAX) {
+          errors.push(ERROR_MESSAGES.VALIDATION_INVALID_TRANSACTION_AMOUNT)
+        }
+      }
     } else if (typeof transaction.amount !== 'number' ||
                transaction.amount < VALIDATION.TRANSACTION_AMOUNT_MIN ||
                transaction.amount > VALIDATION.TRANSACTION_AMOUNT_MAX) {
@@ -132,9 +144,20 @@ class ValidationService {
     }
 
     if (updates.amount !== undefined) {
-      if (typeof updates.amount !== 'number' ||
-          updates.amount < VALIDATION.TRANSACTION_AMOUNT_MIN ||
-          updates.amount > VALIDATION.TRANSACTION_AMOUNT_MAX) {
+      if (typeof updates.amount === 'string') {
+        // Support Latin American format
+        if (!isValidLatinoFormat(updates.amount)) {
+          errors.push(ERROR_MESSAGES.VALIDATION_INVALID_TRANSACTION_AMOUNT)
+        } else {
+          const parsed = parseLatinoAmount(updates.amount)
+          if (parsed < VALIDATION.TRANSACTION_AMOUNT_MIN ||
+              parsed > VALIDATION.TRANSACTION_AMOUNT_MAX) {
+            errors.push(ERROR_MESSAGES.VALIDATION_INVALID_TRANSACTION_AMOUNT)
+          }
+        }
+      } else if (typeof updates.amount !== 'number' ||
+                 updates.amount < VALIDATION.TRANSACTION_AMOUNT_MIN ||
+                 updates.amount > VALIDATION.TRANSACTION_AMOUNT_MAX) {
         errors.push(ERROR_MESSAGES.VALIDATION_INVALID_TRANSACTION_AMOUNT)
       }
     }

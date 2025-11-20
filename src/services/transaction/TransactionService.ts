@@ -4,6 +4,7 @@ import { Transaction, CreateTransactionDTO, UpdateTransactionDTO } from '@/types
 import { measureAsync } from '@/utils/performance'
 import { generateId } from '@/utils/uuid'
 import { getCurrentTimestamp } from '@/utils/date'
+import { parseLatinoAmount } from '@/utils/currency'
 
 /**
  * Transaction statistics interface
@@ -73,8 +74,14 @@ class TransactionService {
   async createTransaction(data: CreateTransactionDTO): Promise<Transaction> {
     try {
       return await measureAsync('create-transaction', async () => {
+        // Parse amount if it's a string (Latin American format)
+        const normalizedData: CreateTransactionDTO = {
+          ...data,
+          amount: typeof data.amount === 'string' ? parseLatinoAmount(data.amount) : data.amount,
+        }
+
         // Validate input
-        const validationResult = ValidationService.validateTransaction(data as any)
+        const validationResult = ValidationService.validateTransaction(normalizedData as any)
         if (!validationResult.isValid) {
           throw new Error(`Validation failed: ${validationResult.errors.join(', ')}`)
         }
@@ -82,7 +89,7 @@ class TransactionService {
         // Create transaction object with ID and timestamps
         const transaction: Transaction = {
           id: generateId(),
-          ...data,
+          ...normalizedData,
           createdAt: getCurrentTimestamp(),
           updatedAt: getCurrentTimestamp()
         }
@@ -230,8 +237,14 @@ class TransactionService {
   async updateTransaction(transactionId: string, updates: UpdateTransactionDTO): Promise<Transaction> {
     try {
       return await measureAsync('update-transaction', async () => {
+        // Parse amount if it's a string (Latin American format)
+        const normalizedUpdates: UpdateTransactionDTO = {
+          ...updates,
+          amount: updates.amount && typeof updates.amount === 'string' ? parseLatinoAmount(updates.amount) : updates.amount,
+        }
+
         // Validate updates
-        const validationResult = ValidationService.validateTransactionUpdate(updates as any)
+        const validationResult = ValidationService.validateTransactionUpdate(normalizedUpdates as any)
         if (!validationResult.isValid) {
           throw new Error(`Validation failed: ${validationResult.errors.join(', ')}`)
         }
@@ -244,7 +257,7 @@ class TransactionService {
 
         // Prepare update with timestamp
         const updateData = {
-          ...updates,
+          ...normalizedUpdates,
           updatedAt: getCurrentTimestamp()
         }
 

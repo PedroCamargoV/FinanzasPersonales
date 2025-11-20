@@ -39,3 +39,13 @@ export {
   logPerformanceSummary,
 } from './performance'
 export type { PerformanceMeasurement } from './performance'
+
+// Currency utilities (Latin American format)
+export {
+  parseLatinoAmount,
+  formatLatinoAmount,
+  displayCurrency,
+  isValidLatinoFormat,
+  getDecimalPlaces,
+} from './currency'
+

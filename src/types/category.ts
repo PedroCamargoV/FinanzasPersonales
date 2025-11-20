@@ -51,7 +51,7 @@ export interface Category {
 export const INCOME_CATEGORIES: Category[] = [
   {
     id: 'salary',
-    name: 'Salary',
+    name: 'Salario',
     type: 'ingreso',
     icon: 'briefcase',
     color: '#4CAF50',
@@ -61,7 +61,7 @@ export const INCOME_CATEGORIES: Category[] = [
   },
   {
     id: 'freelance',
-    name: 'Freelance',
+    name: 'Trabajo Independiente',
     type: 'ingreso',
     icon: 'laptop',
     color: '#4CAF50',
@@ -71,7 +71,7 @@ export const INCOME_CATEGORIES: Category[] = [
   },
   {
     id: 'investment',
-    name: 'Investment',
+    name: 'Inversión',
     type: 'ingreso',
     icon: 'trending-up',
     color: '#4CAF50',
@@ -81,7 +81,7 @@ export const INCOME_CATEGORIES: Category[] = [
   },
   {
     id: 'gifts',
-    name: 'Gifts',
+    name: 'Regalos',
     type: 'ingreso',
     icon: 'gift',
     color: '#4CAF50',
@@ -91,7 +91,7 @@ export const INCOME_CATEGORIES: Category[] = [
   },
   {
     id: 'refund',
-    name: 'Refund',
+    name: 'Reembolso',
     type: 'ingreso',
     icon: 'arrow-left',
     color: '#4CAF50',
@@ -101,7 +101,7 @@ export const INCOME_CATEGORIES: Category[] = [
   },
   {
     id: 'interest',
-    name: 'Interest',
+    name: 'Intereses',
     type: 'ingreso',
     icon: 'percent',
     color: '#4CAF50',
@@ -111,7 +111,7 @@ export const INCOME_CATEGORIES: Category[] = [
   },
   {
     id: 'bonus',
-    name: 'Bonus',
+    name: 'Bonificación',
     type: 'ingreso',
     icon: 'star',
     color: '#4CAF50',
@@ -121,7 +121,7 @@ export const INCOME_CATEGORIES: Category[] = [
   },
   {
     id: 'other-income',
-    name: 'Other Income',
+    name: 'Otros Ingresos',
     type: 'ingreso',
     icon: 'more-horizontal',
     color: '#4CAF50',
@@ -138,7 +138,7 @@ export const EXPENSE_CATEGORIES: Category[] = [
   // Housing (parent)
   {
     id: 'housing',
-    name: 'Housing',
+    name: 'Vivienda',
     type: 'gasto',
     icon: 'home',
     color: '#FF6B6B',
@@ -149,7 +149,7 @@ export const EXPENSE_CATEGORIES: Category[] = [
   // Housing subcategories
   {
     id: 'rent',
-    name: 'Rent',
+    name: 'Alquiler',
     type: 'gasto',
     parentCategory: 'housing',
     icon: 'home',
@@ -160,7 +160,7 @@ export const EXPENSE_CATEGORIES: Category[] = [
   },
   {
     id: 'utilities',
-    name: 'Utilities',
+    name: 'Servicios',
     type: 'gasto',
     parentCategory: 'housing',
     icon: 'zap',
@@ -171,7 +171,7 @@ export const EXPENSE_CATEGORIES: Category[] = [
   },
   {
     id: 'maintenance',
-    name: 'Maintenance',
+    name: 'Mantenimiento',
     type: 'gasto',
     parentCategory: 'housing',
     icon: 'wrench',
@@ -184,7 +184,7 @@ export const EXPENSE_CATEGORIES: Category[] = [
   // Transportation (parent)
   {
     id: 'transportation',
-    name: 'Transportation',
+    name: 'Transporte',
     type: 'gasto',
     icon: 'car',
     color: '#2196F3',
@@ -195,7 +195,7 @@ export const EXPENSE_CATEGORIES: Category[] = [
   // Transportation subcategories
   {
     id: 'gas',
-    name: 'Gas',
+    name: 'Gasolina',
     type: 'gasto',
     parentCategory: 'transportation',
     icon: 'fuel',
@@ -206,7 +206,7 @@ export const EXPENSE_CATEGORIES: Category[] = [
   },
   {
     id: 'car-maintenance',
-    name: 'Car Maintenance',
+    name: 'Mantenimiento de Auto',
     type: 'gasto',
     parentCategory: 'transportation',
     icon: 'wrench',
@@ -217,7 +217,7 @@ export const EXPENSE_CATEGORIES: Category[] = [
   },
   {
     id: 'public-transport',
-    name: 'Public Transport',
+    name: 'Transporte Público',
     type: 'gasto',
     parentCategory: 'transportation',
     icon: 'bus',
@@ -228,7 +228,7 @@ export const EXPENSE_CATEGORIES: Category[] = [
   },
   {
     id: 'parking',
-    name: 'Parking',
+    name: 'Estacionamiento',
     type: 'gasto',
     parentCategory: 'transportation',
     icon: 'square',
@@ -241,7 +241,7 @@ export const EXPENSE_CATEGORIES: Category[] = [
   // Food (parent)
   {
     id: 'food',
-    name: 'Food',
+    name: 'Alimentación',
     type: 'gasto',
     icon: 'utensils',
     color: '#FF9800',
@@ -252,7 +252,7 @@ export const EXPENSE_CATEGORIES: Category[] = [
   // Food subcategories
   {
     id: 'groceries',
-    name: 'Groceries',
+    name: 'Compras de Supermercado',
     type: 'gasto',
     parentCategory: 'food',
     icon: 'shopping-cart',
@@ -263,7 +263,7 @@ export const EXPENSE_CATEGORIES: Category[] = [
   },
   {
     id: 'restaurants',
-    name: 'Restaurants',
+    name: 'Restaurantes',
     type: 'gasto',
     parentCategory: 'food',
     icon: 'utensils',
@@ -274,7 +274,7 @@ export const EXPENSE_CATEGORIES: Category[] = [
   },
   {
     id: 'delivery',
-    name: 'Delivery',
+    name: 'Entregas de Comida',
     type: 'gasto',
     parentCategory: 'food',
     icon: 'truck',
@@ -298,7 +298,7 @@ export const EXPENSE_CATEGORIES: Category[] = [
   // Personal subcategories
   {
     id: 'clothing',
-    name: 'Clothing',
+    name: 'Ropa',
     type: 'gasto',
     parentCategory: 'personal',
     icon: 'shirt',
@@ -309,7 +309,7 @@ export const EXPENSE_CATEGORIES: Category[] = [
   },
   {
     id: 'hygiene',
-    name: 'Hygiene',
+    name: 'Higiene',
     type: 'gasto',
     parentCategory: 'personal',
     icon: 'droplet',
@@ -320,7 +320,7 @@ export const EXPENSE_CATEGORIES: Category[] = [
   },
   {
     id: 'health',
-    name: 'Health',
+    name: 'Salud',
     type: 'gasto',
     parentCategory: 'personal',
     icon: 'heart',
@@ -333,7 +333,7 @@ export const EXPENSE_CATEGORIES: Category[] = [
   // Entertainment (parent)
   {
     id: 'entertainment',
-    name: 'Entertainment',
+    name: 'Entretenimiento',
     type: 'gasto',
     icon: 'play',
     color: '#FF1744',
@@ -344,7 +344,7 @@ export const EXPENSE_CATEGORIES: Category[] = [
   // Entertainment subcategories
   {
     id: 'movies',
-    name: 'Movies',
+    name: 'Películas',
     type: 'gasto',
     parentCategory: 'entertainment',
     icon: 'film',
@@ -355,7 +355,7 @@ export const EXPENSE_CATEGORIES: Category[] = [
   },
   {
     id: 'games',
-    name: 'Games',
+    name: 'Videojuegos',
     type: 'gasto',
     parentCategory: 'entertainment',
     icon: 'gamepad',
@@ -366,7 +366,7 @@ export const EXPENSE_CATEGORIES: Category[] = [
   },
   {
     id: 'sports',
-    name: 'Sports',
+    name: 'Deportes',
     type: 'gasto',
     parentCategory: 'entertainment',
     icon: 'activity',
@@ -379,7 +379,7 @@ export const EXPENSE_CATEGORIES: Category[] = [
   // Subscriptions
   {
     id: 'subscriptions',
-    name: 'Subscriptions',
+    name: 'Suscripciones',
     type: 'gasto',
     icon: 'repeat',
     color: '#00BCD4',
@@ -391,7 +391,7 @@ export const EXPENSE_CATEGORIES: Category[] = [
   // Other
   {
     id: 'other-expense',
-    name: 'Other',
+    name: 'Otros',
     type: 'gasto',
     icon: 'more-horizontal',
     color: '#9E9E9E',

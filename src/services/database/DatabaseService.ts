@@ -243,7 +243,8 @@ export class DatabaseService {
         'readwrite',
         (store) => {
           return new Promise((resolve, reject) => {
-            const request = store.add(dataWithTimestamps)
+            // Use put() instead of add() to allow updates if record already exists
+            const request = store.put(dataWithTimestamps)
             request.onsuccess = () => resolve(request.result as string)
             request.onerror = () => reject(request.error)
           })

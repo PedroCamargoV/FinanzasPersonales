@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
 import { TransactionService, ValidationService, CategoryService } from '@/services'
+import { parseLatinoAmount, formatLatinoAmount } from '@/utils'
 import type { CreateTransactionDTO, Transaction } from '@/types'
 
 interface TransactionFormProps {
@@ -17,6 +18,11 @@ export function TransactionForm({ onSuccess, onCancel, editingTransaction }: Tra
     category: editingTransaction?.category || '',
     description: editingTransaction?.description || '',
   })
+
+  // State for amount display (formatted as Latin American currency)
+  const [amountDisplay, setAmountDisplay] = useState<string>(
+    editingTransaction ? formatLatinoAmount(editingTransaction.amount) : ''
+  )
 
   const [categories, setCategories] = useState<any[]>([])
   const [errors, setErrors] = useState<string[]>([])
@@ -45,10 +51,21 @@ export function TransactionForm({ onSuccess, onCancel, editingTransaction }: Tra
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target
-    setFormData(prev => ({
-      ...prev,
-      [name]: name === 'amount' ? parseFloat(value) || 0 : value,
-    }))
+    
+    if (name === 'amount') {
+      // Update display value and parse the actual amount
+      setAmountDisplay(value)
+      const parsedAmount = parseLatinoAmount(value)
+      setFormData(prev => ({
+        ...prev,
+        amount: parsedAmount,
+      }))
+    } else {
+      setFormData(prev => ({
+        ...prev,
+        [name]: value,
+      }))
+    }
   }
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -140,15 +157,14 @@ export function TransactionForm({ onSuccess, onCancel, editingTransaction }: Tra
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-1">Monto</label>
           <input
-            type="number"
+            type="text"
             name="amount"
-            value={formData.amount}
+            value={amountDisplay}
             onChange={handleChange}
-            placeholder="0.00"
-            step="0.01"
-            min="0"
+            placeholder="Ej: 1.500,50"
             className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
           />
+          <p className="text-xs text-gray-500 mt-1">Formato: 1.500,50 (miles, decimales)</p>
         </div>
 
         {/* Date */}
