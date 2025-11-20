@@ -1,4 +1,4 @@
-# Aplicación de Finanzas Personales - Guía Completa del Proyecto
+# 💰 Finanzas Personales - Aplicación Web v1.0 (COMPLETADA)
 
 ## 📋 Tabla de Contenidos
 
