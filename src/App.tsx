@@ -1,9 +1,10 @@
 import { useEffect, useState } from 'react'
 import { DatabaseService, CategoryService } from '@/services'
-import { Dashboard, TransactionForm, TransactionList, CategoryManager, Analytics, RecurringTransactionManager, ExportBackupManager } from '@/components'
+import { Dashboard, TransactionForm, TransactionList, CategoryManager, Analytics, RecurringTransactionManager, ExportBackupManager, Settings } from '@/components'
+import { useToast, ToastContainer } from '@/utils/toast'
 import type { Transaction } from '@/types'
 
-type AppView = 'dashboard' | 'add' | 'list' | 'categories' | 'analytics' | 'recurring' | 'export'
+type AppView = 'dashboard' | 'add' | 'list' | 'categories' | 'analytics' | 'recurring' | 'export' | 'settings'
 
 export default function App() {
   const [isReady, setIsReady] = useState(false)
@@ -15,6 +16,8 @@ export default function App() {
   const [showAnalytics, setShowAnalytics] = useState(false)
   const [showRecurring, setShowRecurring] = useState(false)
   const [showExport, setShowExport] = useState(false)
+  const [showSettings, setShowSettings] = useState(false)
+  const { toasts, removeToast } = useToast()
 
   useEffect(() => {
     const initializeApp = async () => {
@@ -133,6 +136,12 @@ export default function App() {
               >
                 💾 Backup
               </button>
+              <button
+                onClick={() => setShowSettings(true)}
+                className="px-4 py-2 rounded-lg font-medium bg-gray-600 text-white hover:bg-gray-700 transition-colors"
+              >
+                ⚙️ Ajustes
+              </button>
             </nav>
           </div>
         </div>
@@ -176,6 +185,14 @@ export default function App() {
       {showExport && (
         <ExportBackupManager onClose={() => setShowExport(false)} />
       )}
+
+      {/* Settings Modal */}
+      {showSettings && (
+        <Settings onClose={() => setShowSettings(false)} />
+      )}
+
+      {/* Toast Notifications */}
+      <ToastContainer toasts={toasts} onRemove={removeToast} />
     </div>
   )
 }
