@@ -26,12 +26,16 @@ export function CategoryManager({ onClose }: CategoryManagerProps) {
   const PRESET_COLORS = [
     '#EF4444', // red
     '#F97316', // orange
+    '#FBBF24', // amber
     '#EAB308', // yellow
     '#22C55E', // green
-    '#3B82F6', // blue
-    '#8B5CF6', // purple
-    '#EC4899', // pink
+    '#10B981', // emerald
     '#06B6D4', // cyan
+    '#3B82F6', // blue
+    '#6366F1', // indigo
+    '#8B5CF6', // purple
+    '#A855F7', // violet
+    '#EC4899', // pink
   ]
 
   useEffect(() => {
@@ -64,7 +68,11 @@ export function CategoryManager({ onClose }: CategoryManagerProps) {
     }
 
     try {
-      await CategoryService.createCategory(formData.name, 'gasto')
+      const newCategory = await CategoryService.createCategory(
+        formData.name,
+        'gasto',
+        formData.color
+      )
       setSuccess(`Categoría "${formData.name}" creada exitosamente`)
       setFormData({ name: '', color: '#3B82F6' })
       setShowForm(false)
@@ -103,14 +111,8 @@ export function CategoryManager({ onClose }: CategoryManagerProps) {
   return (
     <div className="w-full">
         {/* Header */}
-        <div className="border-b border-gray-200 p-6 flex items-center justify-between">
+        <div className="border-b border-gray-200 p-6">
           <h2 className="text-2xl font-bold text-gray-900">📁 Gestionar Categorías</h2>
-          <button
-            onClick={onClose}
-            className="text-gray-400 hover:text-gray-600 text-2xl font-bold"
-          >
-            ✕
-          </button>
         </div>
 
         {/* Messages */}
@@ -217,7 +219,7 @@ export function CategoryManager({ onClose }: CategoryManagerProps) {
                     <div className="flex items-center gap-3">
                       <div
                         className="w-6 h-6 rounded-full border-2 border-gray-300"
-                        style={{ backgroundColor: '#8B5CF6' }}
+                        style={{ backgroundColor: cat.color || '#8B5CF6' }}
                       ></div>
                       <span className="font-medium text-gray-900">{cat.name}</span>
                     </div>
