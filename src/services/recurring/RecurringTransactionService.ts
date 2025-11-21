@@ -52,7 +52,7 @@ export class RecurringTransactionService {
    */
   static async getAllRecurring(): Promise<RecurringTransaction[]> {
     const result = await DatabaseService.getAll(this.STORE_NAME)
-    return (result.data || []) as RecurringTransaction[]
+    return ((result as any) || []) as RecurringTransaction[]
   }
 
   /**

@@ -86,7 +86,7 @@ export function Dashboard({ onAddTransaction }: DashboardProps) {
             <div>
               <p className="text-gray-500 text-sm font-medium">Ingresos Totales</p>
               <p className="text-2xl font-bold text-green-600 mt-2">
-                +${stats.totalIncome.toLocaleString('es-ES', {
+                ${stats.totalIncome.toLocaleString('es-ES', {
                   minimumFractionDigits: 2,
                   maximumFractionDigits: 2,
                 })}
@@ -104,7 +104,7 @@ export function Dashboard({ onAddTransaction }: DashboardProps) {
             <div>
               <p className="text-gray-500 text-sm font-medium">Gastos Totales</p>
               <p className="text-2xl font-bold text-red-600 mt-2">
-                -${stats.totalExpenses.toLocaleString('es-ES', {
+                ${stats.totalExpenses.toLocaleString('es-ES', {
                   minimumFractionDigits: 2,
                   maximumFractionDigits: 2,
                 })}
@@ -183,28 +183,19 @@ export function Dashboard({ onAddTransaction }: DashboardProps) {
             <div className="flex justify-between items-center pb-4 border-b">
               <span className="text-sm text-gray-600">Promedio por Transacción</span>
               <span className="font-semibold text-gray-900">
-                ${stats.averageTransaction.toLocaleString('es-ES', {
-                  minimumFractionDigits: 2,
-                  maximumFractionDigits: 2,
-                })}
+                ${stats.averageTransaction.toFixed(2)}
               </span>
             </div>
             <div className="flex justify-between items-center pb-4 border-b">
               <span className="text-sm text-gray-600">Promedio de Ingresos</span>
               <span className="font-semibold text-green-600">
-                +${stats.byType.ingreso.average.toLocaleString('es-ES', {
-                  minimumFractionDigits: 2,
-                  maximumFractionDigits: 2,
-                })}
+                ${stats.byType.ingreso.average.toFixed(2)}
               </span>
             </div>
             <div className="flex justify-between items-center">
               <span className="text-sm text-gray-600">Promedio de Gastos</span>
               <span className="font-semibold text-red-600">
-                -${stats.byType.gasto.average.toLocaleString('es-ES', {
-                  minimumFractionDigits: 2,
-                  maximumFractionDigits: 2,
-                })}
+                ${stats.byType.gasto.average.toFixed(2)}
               </span>
             </div>
           </div>

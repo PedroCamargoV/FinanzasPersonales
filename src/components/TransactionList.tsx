@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
-import { TransactionService, CategoryService } from '@/services'
-import type { Transaction, Category } from '@/types'
+import { TransactionService } from '@/services'
+import type { Transaction } from '@/types'
 
 interface TransactionListProps {
   onEdit: (transaction: Transaction) => void
@@ -10,28 +10,12 @@ interface TransactionListProps {
 export function TransactionList({ onEdit, refreshTrigger }: TransactionListProps) {
   const [transactions, setTransactions] = useState<Transaction[]>([])
   const [filteredTransactions, setFilteredTransactions] = useState<Transaction[]>([])
-  const [categories, setCategories] = useState<Map<string, Category>>(new Map())
   const [loading, setLoading] = useState(true)
 
   // Filters
   const [typeFilter, setTypeFilter] = useState<'all' | 'ingreso' | 'gasto'>('all')
   const [searchQuery, setSearchQuery] = useState('')
   const [sortBy, setSortBy] = useState<'date' | 'amount'>('date')
-
-  // Load categories
-  useEffect(() => {
-    const loadCategories = async () => {
-      try {
-        const cats = await CategoryService.getAllCategories()
-        const categoriesMap = new Map(cats.map(cat => [cat.id, cat]))
-        setCategories(categoriesMap)
-      } catch (err) {
-        console.error('Failed to load categories:', err)
-      }
-    }
-    
-    loadCategories()
-  }, [])
 
   useEffect(() => {
     const loadTransactions = async () => {
@@ -93,11 +77,6 @@ export function TransactionList({ onEdit, refreshTrigger }: TransactionListProps
       console.error('Failed to delete transaction:', err)
       alert('Error al eliminar la transacción')
     }
-  }
-
-  const getCategoryName = (categoryId: string): string => {
-    const category = categories.get(categoryId)
-    return category ? category.name : categoryId
   }
 
   if (loading) {
@@ -196,7 +175,7 @@ export function TransactionList({ onEdit, refreshTrigger }: TransactionListProps
                         transaction.type === 'ingreso' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'
                       }`}
                     >
-                      {getCategoryName(transaction.category)}
+                      {transaction.category}
                     </span>
                   </td>
                   <td
