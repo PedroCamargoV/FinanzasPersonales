@@ -10,8 +10,14 @@ export function Settings({ onClose }: SettingsProps) {
   return (
     <div className="w-full">
       {/* Header */}
-      <div className="border-b border-gray-200 p-6">
+      <div className="border-b border-gray-200 p-6 flex items-center justify-between">
         <h2 className="text-2xl font-bold text-gray-900">⚙️ Configuración</h2>
+        <button
+          onClick={onClose}
+          className="text-gray-400 hover:text-gray-600 text-2xl font-bold"
+        >
+          ✕
+        </button>
       </div>
 
       {/* Content */}

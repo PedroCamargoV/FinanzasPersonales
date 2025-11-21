@@ -88,18 +88,13 @@ class CategoryService {
   /**
    * Create a custom category
    */
-  static async createCategory(
-    name: string,
-    type: 'ingreso' | 'gasto',
-    color?: string
-  ): Promise<Category> {
+  static async createCategory(name: string, type: 'ingreso' | 'gasto'): Promise<Category> {
     try {
       const now = new Date().toISOString()
       const newCategory: any = {
         id: `cat-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
         name,
         type,
-        color: color || '#8B5CF6',
         isSystemDefined: false,
         createdAt: now,
         updatedAt: now,

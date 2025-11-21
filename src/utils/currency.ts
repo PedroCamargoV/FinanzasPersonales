@@ -97,38 +97,25 @@ export function formatLatinoAmount(value: number | string, showCents = true): st
 }
 
 /**
- * Display currency with styling (for UI display)
- * 
- * Formats amount with proper spacing and sign indication
+ * Display currency with optional currency symbol
  * 
  * @param value - Number to format
- * @param type - Transaction type ('ingreso' or 'gasto')
- * @param showSymbol - Whether to show + or - symbol (default: true)
+ * @param currency - Currency code (default: "" for no symbol)
+ * @param showCents - Whether to show cents (default: true)
  * @returns Formatted currency string
  * 
  * @example
- * formatCurrencyDisplay(1500.50, 'ingreso')  // returns "+$1.500,50"
- * formatCurrencyDisplay(1500.50, 'gasto')    // returns "-$1.500,50"
+ * displayCurrency(1500.50, "USD")  // returns "USD 1.500,50"
+ * displayCurrency(1500.50, "$")    // returns "$1.500,50"
+ * displayCurrency(1500.50)         // returns "1.500,50"
  */
-export function formatCurrencyDisplay(
+export function displayCurrency(
   value: number | string,
-  type?: 'ingreso' | 'gasto' | 'balance',
-  showSymbol = true
+  currency = '',
+  showCents = true
 ): string {
-  const num = typeof value === 'string' ? parseLatinoAmount(value) : value
-  
-  if (isNaN(num)) {
-    return '$0,00'
-  }
-
-  const formatted = formatLatinoAmount(num, true)
-  
-  if (!showSymbol || type === 'balance') {
-    return `$${formatted}`
-  }
-
-  const symbol = type === 'ingreso' ? '+' : '-'
-  return `${symbol}$${formatted}`
+  const formatted = formatLatinoAmount(value, showCents)
+  return currency ? `${currency} ${formatted}` : formatted
 }
 
 /**
