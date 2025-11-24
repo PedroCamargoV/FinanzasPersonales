@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { RecurringTransactionService } from '@/services'
-import type { RecurringTransaction } from '@/types'
+import type { RecurringTransaction, RecurrenceFrequency } from '@/types'
 
 export function RecurringTransactionManager() {
   const [recurring, setRecurring] = useState<RecurringTransaction[]>([])

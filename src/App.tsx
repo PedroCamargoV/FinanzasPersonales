@@ -150,23 +150,23 @@ export default function App() {
         )}
 
         {currentView === 'categories' && (
-          <CategoryManager onClose={() => setCurrentView('dashboard')} />
+          <CategoryManager />
         )}
 
         {currentView === 'analytics' && (
-          <Analytics onClose={() => setCurrentView('dashboard')} />
+          <Analytics />
         )}
 
         {currentView === 'recurring' && (
-          <RecurringTransactionManager onClose={() => setCurrentView('dashboard')} />
+          <RecurringTransactionManager />
         )}
 
         {currentView === 'export' && (
-          <ExportBackupManager onClose={() => setCurrentView('dashboard')} />
+          <ExportBackupManager />
         )}
 
         {currentView === 'settings' && (
-          <Settings onClose={() => setCurrentView('dashboard')} />
+          <Settings />
         )}
       </main>
 
