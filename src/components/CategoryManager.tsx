@@ -60,15 +60,11 @@ export function CategoryManager() {
     }
 
     try {
- 002-mejoramiento-de-pestana
       await CategoryService.createCategory(
         formData.name,
         'gasto',
         formData.color
       )
-=======
-      await CategoryService.createCategory(formData.name, 'gasto')
- 001-setup-react-project
       setSuccess(`Categoría "${formData.name}" creada exitosamente`)
       setFormData({ name: '', color: '#3B82F6' })
       setShowForm(false)
@@ -107,14 +103,8 @@ export function CategoryManager() {
   return (
     <div className="w-full">
         {/* Header */}
-        <div className="border-b border-gray-200 p-6 flex items-center justify-between">
+        <div className="border-b border-gray-200 p-6">
           <h2 className="text-2xl font-bold text-gray-900">📁 Gestionar Categorías</h2>
-          <button
-            onClick={onClose}
-            className="text-gray-400 hover:text-gray-600 text-2xl font-bold"
-          >
-            ✕
-          </button>
         </div>
 
         {/* Messages */}

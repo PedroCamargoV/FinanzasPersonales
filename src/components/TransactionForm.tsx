@@ -1,7 +1,8 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { TransactionService, ValidationService, CategoryService } from '@/services'
 import { parseLatinoAmount, formatLatinoAmount } from '@/utils'
-import type { CreateTransactionDTO, Transaction } from '@/types'
+import type { CreateTransactionDTO, Transaction, Category } from '@/types'
+import { ChevronDown } from 'lucide-react'
 
 interface TransactionFormProps {
   onSuccess: () => void
@@ -9,7 +10,6 @@ interface TransactionFormProps {
   editingTransaction?: Transaction | null
 }
 
- 002-mejoramiento-de-pestana
 // Custom Category Dropdown Component
 function CategoryDropdown({ 
   categories, 
@@ -190,8 +190,6 @@ function CategoryDropdown({
   )
 }
 
-=======
- 001-setup-react-project
 export function TransactionForm({ onSuccess, onCancel, editingTransaction }: TransactionFormProps) {
   const [formData, setFormData] = useState<CreateTransactionDTO>({
     title: editingTransaction?.title || '',
@@ -207,7 +205,7 @@ export function TransactionForm({ onSuccess, onCancel, editingTransaction }: Tra
     editingTransaction ? formatLatinoAmount(editingTransaction.amount) : ''
   )
 
-  const [categories, setCategories] = useState<any[]>([])
+  const [categories, setCategories] = useState<Category[]>([])
   const [errors, setErrors] = useState<string[]>([])
   const [loading, setLoading] = useState(false)
 
@@ -217,10 +215,14 @@ export function TransactionForm({ onSuccess, onCancel, editingTransaction }: Tra
         // Add small delay to ensure categories are initialized in DB
         await new Promise(resolve => setTimeout(resolve, 100))
         
-        const cats = await CategoryService.getCategoriesByType(formData.type)
-        setCategories(cats)
+        // Get categories of the selected type PLUS custom categories
+        const allCategories = await CategoryService.getAllCategories()
+        const filteredCategories = allCategories.filter(
+          cat => cat.type === formData.type || !cat.isSystemDefined
+        )
+        setCategories(filteredCategories)
         
-        if (cats.length === 0) {
+        if (filteredCategories.length === 0) {
           console.warn(`No categories found for type: ${formData.type}`)
         }
       } catch (err) {
@@ -272,6 +274,13 @@ export function TransactionForm({ onSuccess, onCancel, editingTransaction }: Tra
           setLoading(false)
           return
         }
+      }
+
+      // Additional validation: Description is required for "Otros" category
+      if (formData.category === 'other-expense' && !formData.description?.trim()) {
+        setErrors(['La descripción es obligatoria cuando seleccionas la categoría "Otros"'])
+        setLoading(false)
+        return
       }
 
       // Save
@@ -365,32 +374,31 @@ export function TransactionForm({ onSuccess, onCancel, editingTransaction }: Tra
         {/* Category */}
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-1">Categoría</label>
-          <select
-            name="category"
+          <CategoryDropdown
+            categories={categories}
             value={formData.category}
-            onChange={handleChange}
-            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-          >
-            <option value="">Selecciona una categoría</option>
-            {categories.map(cat => (
-              <option key={cat.id} value={cat.id}>
-                {cat.name}
-              </option>
-            ))}
-          </select>
+            onChange={(categoryId) => setFormData(prev => ({ ...prev, category: categoryId }))}
+            type={formData.type as 'ingreso' | 'gasto'}
+          />
         </div>
 
         {/* Description */}
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">Descripción (Opcional)</label>
+          <label className="block text-sm font-medium text-gray-700 mb-1">
+            Descripción {formData.category === 'other-expense' && <span className="text-red-500">*</span>}
+          </label>
           <textarea
             name="description"
             value={formData.description}
             onChange={handleChange}
-            placeholder="Notas adicionales..."
+            placeholder={formData.category === 'other-expense' ? 'Descripción requerida para la categoría "Otros"' : 'Notas adicionales...'}
             rows={3}
+            required={formData.category === 'other-expense'}
             className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
           />
+          <p className="text-xs text-gray-500 mt-1">
+            {formData.category === 'other-expense' ? 'Requerida para la categoría "Otros"' : 'Opcional'}
+          </p>
         </div>
 
         {/* Actions */}

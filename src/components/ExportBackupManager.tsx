@@ -162,14 +162,8 @@ export function ExportBackupManager() {
   return (
     <div className="w-full">
       {/* Header */}
-      <div className="border-b border-gray-200 p-6 flex items-center justify-between">
+      <div className="border-b border-gray-200 p-6">
         <h2 className="text-2xl font-bold text-gray-900">💾 Exportar & Backup</h2>
-        <button
-          onClick={onClose}
-          className="text-gray-400 hover:text-gray-600 text-2xl font-bold"
-        >
-          ✕
-        </button>
       </div>
 
       {/* Content */}
