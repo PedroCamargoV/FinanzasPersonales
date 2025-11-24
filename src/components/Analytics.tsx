@@ -2,17 +2,13 @@ import { useEffect, useState } from 'react'
 import { TransactionService } from '@/services'
 import type { Transaction } from '@/types'
 
-interface AnalyticsProps {
-  onClose: () => void
-}
-
 interface CategorySpending {
   category: string
   amount: number
   percentage: number
 }
 
-export function Analytics({ onClose }: AnalyticsProps) {
+export function Analytics() {
   const [transactions, setTransactions] = useState<Transaction[]>([])
   const [categorySpending, setCategorySpending] = useState<CategorySpending[]>([])
   const [totalIncome, setTotalIncome] = useState(0)

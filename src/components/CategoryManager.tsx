@@ -2,16 +2,12 @@ import { useEffect, useState } from 'react'
 import { CategoryService } from '@/services'
 import type { Category } from '@/types'
 
-interface CategoryManagerProps {
-  onClose: () => void
-}
-
 interface NewCategoryForm {
   name: string
   color: string
 }
 
-export function CategoryManager({ onClose }: CategoryManagerProps) {
+export function CategoryManager() {
   const [categories, setCategories] = useState<Category[]>([])
   const [customCategories, setCustomCategories] = useState<Category[]>([])
   const [loading, setLoading] = useState(true)
@@ -68,7 +64,7 @@ export function CategoryManager({ onClose }: CategoryManagerProps) {
     }
 
     try {
-      const newCategory = await CategoryService.createCategory(
+      await CategoryService.createCategory(
         formData.name,
         'gasto',
         formData.color

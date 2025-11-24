@@ -1,11 +1,7 @@
 import { DatabaseService, TransactionService } from '@/services'
 import { useState } from 'react'
 
-interface ExportBackupManagerProps {
-  onClose: () => void
-}
-
-export function ExportBackupManager({ onClose }: ExportBackupManagerProps) {
+export function ExportBackupManager() {
   const [loading, setLoading] = useState(false)
   const [success, setSuccess] = useState<string | null>(null)
   const [error, setError] = useState<string | null>(null)

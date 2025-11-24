@@ -33,10 +33,13 @@ function CategoryDropdown({
   categories
     .filter(cat => cat.parentCategory && cat.type === type)
     .forEach(cat => {
-      if (!grouped[cat.parentCategory]) {
-        grouped[cat.parentCategory] = []
+      const parentKey = cat.parentCategory
+      if (parentKey && !grouped[parentKey]) {
+        grouped[parentKey] = []
       }
-      grouped[cat.parentCategory].push(cat)
+      if (parentKey) {
+        grouped[parentKey].push(cat)
+      }
     })
   
   Object.keys(grouped).forEach(key => {

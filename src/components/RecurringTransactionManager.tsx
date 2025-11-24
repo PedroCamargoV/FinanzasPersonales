@@ -1,12 +1,8 @@
 import { useEffect, useState } from 'react'
 import { RecurringTransactionService } from '@/services'
-import type { RecurringTransaction, RecurrenceFrequency } from '@/types'
+import type { RecurringTransaction } from '@/types'
 
-interface RecurringTransactionManagerProps {
-  onClose: () => void
-}
-
-export function RecurringTransactionManager({ onClose }: RecurringTransactionManagerProps) {
+export function RecurringTransactionManager() {
   const [recurring, setRecurring] = useState<RecurringTransaction[]>([])
   const [loading, setLoading] = useState(true)
   const [showForm, setShowForm] = useState(false)

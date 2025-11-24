@@ -1,10 +1,6 @@
 import { useDarkMode } from '@/utils/darkMode'
 
-interface SettingsProps {
-  onClose: () => void
-}
-
-export function Settings({ onClose }: SettingsProps) {
+export function Settings() {
   const { isDark, toggle } = useDarkMode()
 
   return (
