@@ -6,7 +6,6 @@ export function RecurringTransactionManager() {
   const [recurring, setRecurring] = useState<RecurringTransaction[]>([])
   const [loading, setLoading] = useState(true)
   const [showForm, setShowForm] = useState(false)
-  const [editingId, setEditingId] = useState<string | null>(null)
   const [error, setError] = useState<string | null>(null)
   const [success, setSuccess] = useState<string | null>(null)
 
@@ -87,37 +86,18 @@ export function RecurringTransactionManager() {
         return
       }
 
-      if (editingId) {
-        // Update existing
-        const rec = recurring.find(r => r.id === editingId)
-        if (rec) {
-          await RecurringTransactionService.updateRecurring(editingId, {
-            title: formData.title,
-            amount: parseFloat(formData.amount),
-            type: formData.type,
-            category: formData.category,
-            frequency: formData.frequency,
-            startDate,
-            endDate,
-            description: formData.description,
-          })
-          setSuccess('Transacción recurrente actualizada exitosamente')
-        }
-      } else {
-        // Create new
-        await RecurringTransactionService.createRecurring(
-          formData.title,
-          parseFloat(formData.amount),
-          formData.type,
-          formData.category,
-          formData.frequency,
-          startDate,
-          endDate,
-          formData.description
-        )
-        setSuccess('Transacción recurrente creada exitosamente')
-      }
+      await RecurringTransactionService.createRecurring(
+        formData.title,
+        parseFloat(formData.amount),
+        formData.type,
+        formData.category,
+        formData.frequency,
+        startDate,
+        endDate,
+        formData.description
+      )
 
+      setSuccess('Transacción recurrente creada exitosamente')
       setFormData({
         title: '',
         amount: '',
@@ -128,64 +108,19 @@ export function RecurringTransactionManager() {
         endDate: '',
         description: '',
       })
-      setEditingId(null)
       setShowForm(false)
       await loadRecurring()
-      
-      // Auto-hide success message after 3 seconds
-      setTimeout(() => setSuccess(null), 3000)
     } catch (err) {
-      setError(err instanceof Error ? err.message : editingId ? 'Error updating recurring transaction' : 'Error creating recurring transaction')
+      setError(err instanceof Error ? err.message : 'Error creating recurring transaction')
     }
-  }
-
-  const handleEdit = (rec: RecurringTransaction) => {
-    setEditingId(rec.id)
-    setFormData({
-      title: rec.title,
-      amount: rec.amount.toString(),
-      type: rec.type,
-      category: rec.category,
-      frequency: rec.frequency,
-      startDate: new Date(rec.startDate).toISOString().split('T')[0],
-      endDate: rec.endDate ? new Date(rec.endDate).toISOString().split('T')[0] : '',
-      description: rec.description || '',
-    })
-    setShowForm(true)
-  }
-
-  const cancelEdit = () => {
-    setEditingId(null)
-    setFormData({
-      title: '',
-      amount: '',
-      type: 'gasto',
-      category: '',
-      frequency: 'monthly',
-      startDate: new Date().toISOString().split('T')[0],
-      endDate: '',
-      description: '',
-    })
-    setShowForm(false)
   }
 
   const handleToggle = async (id: string) => {
     try {
-      // Find and update the transaction in local state
-      const updatedRecurring = recurring.map(rec =>
-        rec.id === id ? { ...rec, isActive: !rec.isActive } : rec
-      )
-      setRecurring(updatedRecurring)
-      setSuccess('Estado actualizado')
-      
-      // Auto-hide success message after 3 seconds
-      setTimeout(() => setSuccess(null), 3000)
-      
-      // Update in database
       await RecurringTransactionService.toggleRecurring(id)
-    } catch (err) {
-      // Reload on error to revert the optimistic update
       await loadRecurring()
+      setSuccess('Estado actualizado')
+    } catch (err) {
       setError(err instanceof Error ? err.message : 'Error toggling recurring transaction')
     }
   }
@@ -217,8 +152,14 @@ export function RecurringTransactionManager() {
   return (
     <div className="w-full">
       {/* Header */}
-      <div className="border-b border-gray-200 p-6">
+      <div className="border-b border-gray-200 p-6 flex items-center justify-between">
         <h2 className="text-2xl font-bold text-gray-900">⏱️ Transacciones Recurrentes</h2>
+        <button
+          onClick={onClose}
+          className="text-gray-400 hover:text-gray-600 text-2xl font-bold"
+        >
+          ✕
+        </button>
       </div>
 
       {/* Content */}
@@ -237,10 +178,10 @@ export function RecurringTransactionManager() {
 
           {/* New Button */}
           <button
-            onClick={() => editingId ? cancelEdit() : setShowForm(!showForm)}
+            onClick={() => setShowForm(!showForm)}
             className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium"
           >
-            {editingId ? '✕ Cancelar Edición' : showForm ? '✕ Cancelar' : '+ Nueva Transacción Recurrente'}
+            {showForm ? '✕ Cancelar' : '+ Nueva Transacción Recurrente'}
           </button>
 
           {/* Form */}
@@ -365,7 +306,7 @@ export function RecurringTransactionManager() {
                 type="submit"
                 className="w-full px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors font-medium"
               >
-                {editingId ? 'Actualizar Transacción Recurrente' : 'Crear Transacción Recurrente'}
+                Crear Transacción Recurrente
               </button>
             </form>
           )}
@@ -397,12 +338,12 @@ export function RecurringTransactionManager() {
                         <span className="px-2 py-1 text-xs font-medium rounded bg-purple-100 text-purple-800">
                           {getFrequencyLabel(rec.frequency)}
                         </span>
-                        <span className={`px-3 py-1 text-xs font-bold rounded-full transition-all ${
+                        <span className={`px-2 py-1 text-xs font-medium rounded ${
                           rec.isActive
-                            ? 'bg-green-200 text-green-900 ring-2 ring-green-400'
-                            : 'bg-red-200 text-red-900 ring-2 ring-red-400'
+                            ? 'bg-green-100 text-green-800'
+                            : 'bg-gray-100 text-gray-800'
                         }`}>
-                          {rec.isActive ? '✓ Activo' : '⏸ Inactivo'}
+                          {rec.isActive ? 'Activo' : 'Inactivo'}
                         </span>
                       </div>
 
@@ -419,9 +360,11 @@ export function RecurringTransactionManager() {
                         <div>
                           <span className="font-medium">Inicio:</span> {new Date(rec.startDate).toLocaleDateString('es-ES')}
                         </div>
-                        <div>
-                          <span className="font-medium">Fin:</span> {rec.endDate ? new Date(rec.endDate).toLocaleDateString('es-ES') : 'Indefinido'}
-                        </div>
+                        {rec.endDate && (
+                          <div>
+                            <span className="font-medium">Fin:</span> {new Date(rec.endDate).toLocaleDateString('es-ES')}
+                          </div>
+                        )}
                       </div>
 
                       {rec.description && (
@@ -429,13 +372,7 @@ export function RecurringTransactionManager() {
                       )}
                     </div>
 
-                    <div className="flex gap-2 ml-4 flex-wrap justify-end">
-                      <button
-                        onClick={() => handleEdit(rec)}
-                        className="px-3 py-1 text-sm font-medium rounded bg-blue-100 text-blue-700 hover:bg-blue-200 transition-colors"
-                      >
-                        ✎ Editar
-                      </button>
+                    <div className="flex gap-2 ml-4">
                       <button
                         onClick={() => handleToggle(rec.id)}
                         className={`px-3 py-1 text-sm font-medium rounded transition-colors ${

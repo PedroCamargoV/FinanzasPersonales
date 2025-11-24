@@ -44,6 +44,7 @@ export type { PerformanceMeasurement } from './performance'
 export {
   parseLatinoAmount,
   formatLatinoAmount,
+  displayCurrency,
   isValidLatinoFormat,
   getDecimalPlaces,
 } from './currency'
