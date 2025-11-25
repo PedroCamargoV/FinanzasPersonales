@@ -1,11 +1,7 @@
 import { DatabaseService, TransactionService } from '@/services'
 import { useState } from 'react'
 
-interface ExportBackupManagerProps {
-  onClose: () => void
-}
-
-export function ExportBackupManager({ onClose }: ExportBackupManagerProps) {
+export function ExportBackupManager() {
   const [loading, setLoading] = useState(false)
   const [success, setSuccess] = useState<string | null>(null)
   const [error, setError] = useState<string | null>(null)
@@ -166,14 +162,8 @@ export function ExportBackupManager({ onClose }: ExportBackupManagerProps) {
   return (
     <div className="w-full">
       {/* Header */}
-      <div className="border-b border-gray-200 p-6 flex items-center justify-between">
+      <div className="border-b border-gray-200 p-6">
         <h2 className="text-2xl font-bold text-gray-900">💾 Exportar & Backup</h2>
-        <button
-          onClick={onClose}
-          className="text-gray-400 hover:text-gray-600 text-2xl font-bold"
-        >
-          ✕
-        </button>
       </div>
 
       {/* Content */}

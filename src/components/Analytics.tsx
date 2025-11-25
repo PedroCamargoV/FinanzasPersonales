@@ -2,17 +2,13 @@ import { useEffect, useState } from 'react'
 import { TransactionService } from '@/services'
 import type { Transaction } from '@/types'
 
-interface AnalyticsProps {
-  onClose: () => void
-}
-
 interface CategorySpending {
   category: string
   amount: number
   percentage: number
 }
 
-export function Analytics({ onClose }: AnalyticsProps) {
+export function Analytics() {
   const [transactions, setTransactions] = useState<Transaction[]>([])
   const [categorySpending, setCategorySpending] = useState<CategorySpending[]>([])
   const [totalIncome, setTotalIncome] = useState(0)
@@ -122,14 +118,8 @@ export function Analytics({ onClose }: AnalyticsProps) {
   return (
     <div className="w-full">
       {/* Header */}
-      <div className="border-b border-gray-200 p-6 flex items-center justify-between">
+      <div className="border-b border-gray-200 p-6">
         <h2 className="text-2xl font-bold text-gray-900">📊 Análisis de Gastos</h2>
-        <button
-          onClick={onClose}
-          className="text-gray-400 hover:text-gray-600 text-2xl font-bold"
-        >
-          ✕
-        </button>
       </div>
 
       {/* Content */}

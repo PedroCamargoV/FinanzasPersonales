@@ -2,11 +2,7 @@ import { useEffect, useState } from 'react'
 import { RecurringTransactionService } from '@/services'
 import type { RecurringTransaction, RecurrenceFrequency } from '@/types'
 
-interface RecurringTransactionManagerProps {
-  onClose: () => void
-}
-
-export function RecurringTransactionManager({ onClose }: RecurringTransactionManagerProps) {
+export function RecurringTransactionManager() {
   const [recurring, setRecurring] = useState<RecurringTransaction[]>([])
   const [loading, setLoading] = useState(true)
   const [showForm, setShowForm] = useState(false)
@@ -156,14 +152,8 @@ export function RecurringTransactionManager({ onClose }: RecurringTransactionMan
   return (
     <div className="w-full">
       {/* Header */}
-      <div className="border-b border-gray-200 p-6 flex items-center justify-between">
+      <div className="border-b border-gray-200 p-6">
         <h2 className="text-2xl font-bold text-gray-900">⏱️ Transacciones Recurrentes</h2>
-        <button
-          onClick={onClose}
-          className="text-gray-400 hover:text-gray-600 text-2xl font-bold"
-        >
-          ✕
-        </button>
       </div>
 
       {/* Content */}

@@ -2,16 +2,12 @@ import { useEffect, useState } from 'react'
 import { CategoryService } from '@/services'
 import type { Category } from '@/types'
 
-interface CategoryManagerProps {
-  onClose: () => void
-}
-
 interface NewCategoryForm {
   name: string
   color: string
 }
 
-export function CategoryManager({ onClose }: CategoryManagerProps) {
+export function CategoryManager() {
   const [categories, setCategories] = useState<Category[]>([])
   const [customCategories, setCustomCategories] = useState<Category[]>([])
   const [loading, setLoading] = useState(true)
@@ -64,7 +60,11 @@ export function CategoryManager({ onClose }: CategoryManagerProps) {
     }
 
     try {
-      await CategoryService.createCategory(formData.name, 'gasto')
+      await CategoryService.createCategory(
+        formData.name,
+        'gasto',
+        formData.color
+      )
       setSuccess(`Categoría "${formData.name}" creada exitosamente`)
       setFormData({ name: '', color: '#3B82F6' })
       setShowForm(false)
@@ -103,14 +103,8 @@ export function CategoryManager({ onClose }: CategoryManagerProps) {
   return (
     <div className="w-full">
         {/* Header */}
-        <div className="border-b border-gray-200 p-6 flex items-center justify-between">
+        <div className="border-b border-gray-200 p-6">
           <h2 className="text-2xl font-bold text-gray-900">📁 Gestionar Categorías</h2>
-          <button
-            onClick={onClose}
-            className="text-gray-400 hover:text-gray-600 text-2xl font-bold"
-          >
-            ✕
-          </button>
         </div>
 
         {/* Messages */}
